@@ -3,11 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:prod": "ng build --configuration production"
+    "build:prod": "ng build --configuration production",
+    "start:frontend": "ng serve --proxy-config proxy.conf.json",
+  "start:backend": "npm start --prefix ../backend",
+  "start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   },
   "prettier": {
     "printWidth": 100,
