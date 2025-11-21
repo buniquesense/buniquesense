@@ -1,0 +1,225 @@
+<div class="registration-container">
+  <div class="background-pattern"></div>
+  
+  <div class="content-wrapper">
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="isSubmitted">
+      <div class="success-icon">✓</div>
+      <h2>Thank you for joining!</h2>
+      <p>Our team will contact you shortly with next steps.</p>
+      <button class="btn-secondary" (click)="resetForm()">Submit Another Registration</button>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="registration-content" *ngIf="!isSubmitted">
+      <div class="hero-section">
+        <div class="floating-elements">
+          <span class="float-icon">🕉️</span>
+          <span class="float-icon">📖</span>
+          <span class="float-icon">✍️</span>
+        </div>
+        <h1 class="main-title">Begin Your Journey Today</h1>
+        <p class="subtitle">
+          Ready to start writing your way toward peace and clarity?<br>
+          Fill out the registration form below to enroll in our <strong>11-Month Bhagavad Gita Writing Program</strong>.
+        </p>
+      </div>
+
+      <div class="form-card">
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" *ngIf="!isSubmitted" novalidate>
+          
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="fullName">
+              <span class="label-icon">👤</span>
+              Full Name
+            </label>
+            <input 
+              type="text" 
+              id="fullName" 
+              formControlName="fullName"
+               class="form-control">
+              <div *ngIf="f['fullName'].invalid && f['fullName'].touched" class="text-danger small">
+                <div *ngIf="f['fullName'].errors?.['required']">Full name is required</div>
+                <div *ngIf="f['fullName'].errors?.['minlength']">Must be at least 3 characters</div>
+              </div>
+          </div>
+
+          <!-- Phone & Email Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phoneNumber">
+                <span class="label-icon">📞</span>
+                Phone Number
+              </label>
+              <input 
+                type="tel" 
+                id="phoneNumber" 
+                formControlName="phoneNumber"
+                class="form-control">
+                <div *ngIf="f['phoneNumber'].invalid && f['phoneNumber'].touched" class="text-danger small">
+                  <div *ngIf="f['phoneNumber'].errors?.['required']">Phone number is required</div>
+                  <div *ngIf="f['phoneNumber'].errors?.['pattern']">Enter valid 10-digit number</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">
+                <span class="label-icon">📧</span>
+                Email ID
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email"
+                class="form-control">
+                <div *ngIf="f['email'].invalid && f['email'].touched" class="text-danger small">
+                  <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+                  <div *ngIf="f['email'].errors?.['email']">Enter valid email</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">
+                <span class="label-icon">📧</span>
+                Password
+              </label>
+              <input 
+                type="password" 
+                id="email" 
+                formControlName="password"
+                class="form-control">
+                <div *ngIf="f['password'].invalid && f['password'].touched" class="text-danger small">
+                  <div *ngIf="f['password'].errors?.['required']">Password required</div>
+                  <div *ngIf="f['password'].errors?.['minlength']">Min length 6</div>
+                </div>
+            </div>
+
+          </div>
+
+          <!-- Address -->
+          <div class="form-group">
+            <label for="address">
+              <span class="label-icon">🏠</span>
+              Address
+            </label>
+            <textarea 
+              id="address" 
+              formControlName="address"
+              placeholder="Enter your complete address"
+              rows="3"
+              [class.error]="f['address'].invalid && f['address'].touched"
+              class="form-control"></textarea>
+            <div class="error-message" *ngIf="f['address'].invalid && f['address'].touched">
+              <span *ngIf="f['address'].errors?.['required']">Address is required</span>
+              <span *ngIf="f['address'].errors?.['minlength']">Address must be at least 10 characters</span>
+            </div>
+          </div>
+
+          <!-- City & State Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">
+                <span class="label-icon">🏙️</span>
+                City
+              </label>
+              <input 
+                type="text" 
+                id="city" 
+                formControlName="city"
+                placeholder="Your city"
+                [class.error]="f['city'].invalid && f['city'].touched">
+              <div class="error-message" *ngIf="f['city'].invalid && f['city'].touched"
+              class="form-control">
+                <span>City is required</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="state">
+                <span class="label-icon">📍</span>
+                State
+              </label>
+              <input 
+                type="text" 
+                id="state" 
+                formControlName="state"
+                placeholder="Your state"
+                [class.error]="f['state'].invalid && f['state'].touched">
+              <div class="error-message" *ngIf="f['state'].invalid && f['state'].touched"
+              class="form-control">
+                <span>State is required</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <!-- <div class="form-group">
+            <label>
+              <span class="label-icon">💰</span>
+              Payment Option
+            </label>
+            <div class="payment-options">
+              <div 
+                *ngFor="let option of paymentOptions" 
+                class="payment-card"
+                [class.selected]="f['paymentOption'].value === option.value"
+                (click)="registrationForm.patchValue({paymentOption: option.value})">
+                <input 
+                  type="radio" 
+                  [id]="option.value" 
+                  [value]="option.value"
+                  formControlName="paymentOption">
+                <label [for]="option.value">
+                  <span class="payment-icon">{{ option.icon }}</span>
+                  <span class="payment-label">{{ option.label }}</span>
+                  <span class="checkmark">✓</span>
+                </label>
+              </div>
+            </div>
+          </div> -->
+        <div class="form-group">
+
+          <div class="mb-3">
+            <label>Payment</label>
+            <select formControlName="paymentOption" class="form-control">
+              <option *ngFor="let o of paymentOptions" [value]="o.value">{{ o.label }}</option>
+            </select>
+          </div>
+
+          <!-- <div class="mb-3">
+            <label>Product (kit)</label>
+            <input formControlName="productId" placeholder="product id (get from admin)" class="form-control" />
+          </div> -->
+
+          <!-- <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Submit & Join Now</span>
+            <span *ngIf="isLoading">Processing...</span>
+          </button> -->
+
+
+        <!-- <div *ngIf="isSubmitted" class="alert alert-success mt-3">
+          Thank you! Your registration/payment is saved. We will contact you.
+        </div> -->
+      </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="btn-primary"
+            [disabled]="isLoading">
+            <span *ngIf="!isLoading">Submit & Join Now</span>
+            <span *ngIf="isLoading" class="loading-spinner">
+              <span class="spinner"></span> Processing...
+            </span>
+          </button>
+
+        </form>
+
+        <!-- Additional Info -->
+        <div class="form-footer">
+          <p>🔒 Your information is secure and will be used only for program enrollment.</p>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,38 @@
+<div class="container py-4">
+  <h3>Admin Dashboard</h3>
+  <div *ngIf="loading">Loading…</div>
+
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Orders</h5>
+        <div class="stat">{{ ordersCount }}</div>
+        <a routerLink="/admin/orders" class="btn btn-sm btn-outline-primary mt-2">View Orders</a>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Products</h5>
+        <div class="stat">{{ productsCount }}</div>
+        <a routerLink="/admin/products" class="btn btn-sm btn-outline-primary mt-2">Manage Products</a>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Guides</h5>
+        <div class="stat">{{ guidesCount }}</div>
+        <a routerLink="/admin/guides" class="btn btn-sm btn-outline-primary mt-2">Manage Guides</a>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card p-3 text-center">
+        <h5>Users</h5>
+        <div class="stat">{{ usersCount }}</div>
+        <a routerLink="/admin/users" class="btn btn-sm btn-outline-primary mt-2">View Users</a>
+      </div>
+    </div>
+  </div>
+</div>

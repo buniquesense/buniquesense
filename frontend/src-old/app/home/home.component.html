@@ -1,0 +1,11 @@
+<section class="hero"><div class="container"><h1>Bhagavad Gītā — Sample Reader</h1>
+<p>Responsive, animated starter. Replace the sample content with your own later.</p>
+<a routerLink="/chapter/1" class="btn">Open Reader</a></div></section>
+<div class="container" style="padding:1.25rem 1rem"><h2 style="color:var(--brand)">Chapters</h2>
+<div *ngIf="loading">Loading…</div><div *ngIf="error">{{error}}</div>
+<div class="grid" *ngIf="!loading && !error">
+  <a class="card" *ngFor="let c of chapters" [routerLink]="['/chapter', c.id]">
+    <div class="num">Chapter {{c.number}}</div>
+    <div class="name">{{c.title}}</div>
+  </a>
+</div></div>

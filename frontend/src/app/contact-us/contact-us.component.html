@@ -1,0 +1,175 @@
+<div class="contact-container">
+  <div class="decorative-bg">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1 class="main-title">We'd Love to Hear From You</h1>
+      <p class="subtitle">
+        Whether you have questions, feedback, or would like to collaborate, we're here to connect with you.<br>
+        <strong>Reach out and let's spread the wisdom of the Bhagavad Gita together.</strong>
+      </p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="contact-grid">
+      
+      <!-- Left Side - Contact Info -->
+      <div class="info-section">
+        
+        <!-- Contact Details Cards -->
+        <div class="info-cards">
+          <div *ngFor="let detail of contactDetails" class="info-card">
+            <div class="info-icon">{{ detail.icon }}</div>
+            <div class="info-content">
+              <h3>{{ detail.label }}</h3>
+              <a *ngIf="detail.link" [href]="detail.link" class="info-value link">
+                {{ detail.value }}
+              </a>
+              <p *ngIf="!detail.link" class="info-value">{{ detail.value }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="social-section">
+          <h3 class="social-title">Follow Us</h3>
+          <div class="social-links">
+            <a 
+              *ngFor="let social of socialLinks" 
+              [href]="social.url" 
+              target="_blank"
+              class="social-link"
+              [style.--social-color]="social.color">
+              <span class="social-icon">{{ social.icon }}</span>
+              <span class="social-name">{{ social.name }}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Decorative Quote -->
+        <div class="quote-card">
+          <div class="quote-icon">🕉️</div>
+          <p class="quote-text">
+            "The mind acts like an enemy for those who do not control it."
+          </p>
+          <p class="quote-source">— Bhagavad Gita 6.6</p>
+        </div>
+
+      </div>
+
+      <!-- Right Side - Contact Form -->
+      <div class="form-section">
+        
+        <!-- Success Message -->
+        <div class="success-card" *ngIf="isSubmitted">
+          <div class="success-icon">✓</div>
+          <h2>Message Sent Successfully!</h2>
+          <p>Thank you for reaching out. We'll get back to you within 24-48 hours.</p>
+          <button class="btn-secondary" (click)="resetForm()">Send Another Message</button>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-card" *ngIf="!isSubmitted">
+          <div class="form-header">
+            <h2>Send Us a Message</h2>
+            <p>Fill out the form below and we'll respond as soon as possible</p>
+          </div>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Name Field -->
+            <div class="form-group">
+              <label for="name">
+                <span class="label-icon">👤</span>
+                Your Name
+              </label>
+              <input 
+                type="text" 
+                id="name" 
+                formControlName="name"
+                placeholder="Enter your full name"
+                [class.error]="f['name'].invalid && f['name'].touched">
+              <div class="error-message" *ngIf="f['name'].invalid && f['name'].touched">
+                <span *ngIf="f['name'].errors?.['required']">Name is required</span>
+                <span *ngIf="f['name'].errors?.['minlength']">Name must be at least 3 characters</span>
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="email">
+                <span class="label-icon">📧</span>
+                Email Address
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email"
+                placeholder="your@email.com"
+                [class.error]="f['email'].invalid && f['email'].touched">
+              <div class="error-message" *ngIf="f['email'].invalid && f['email'].touched">
+                <span *ngIf="f['email'].errors?.['required']">Email is required</span>
+                <span *ngIf="f['email'].errors?.['email']">Enter a valid email address</span>
+              </div>
+            </div>
+
+            <!-- Subject Field -->
+            <div class="form-group">
+              <label for="subject">
+                <span class="label-icon">📝</span>
+                Subject
+              </label>
+              <input 
+                type="text" 
+                id="subject" 
+                formControlName="subject"
+                placeholder="What is this regarding?"
+                [class.error]="f['subject'].invalid && f['subject'].touched">
+              <div class="error-message" *ngIf="f['subject'].invalid && f['subject'].touched">
+                <span *ngIf="f['subject'].errors?.['required']">Subject is required</span>
+                <span *ngIf="f['subject'].errors?.['minlength']">Subject must be at least 5 characters</span>
+              </div>
+            </div>
+
+            <!-- Message Field -->
+            <div class="form-group">
+              <label for="message">
+                <span class="label-icon">💬</span>
+                Your Message
+              </label>
+              <textarea 
+                id="message" 
+                formControlName="message"
+                placeholder="Tell us more about your inquiry..."
+                rows="6"
+                [class.error]="f['message'].invalid && f['message'].touched"></textarea>
+              <div class="error-message" *ngIf="f['message'].invalid && f['message'].touched">
+                <span *ngIf="f['message'].errors?.['required']">Message is required</span>
+                <span *ngIf="f['message'].errors?.['minlength']">Message must be at least 20 characters</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="btn-primary"
+              [disabled]="isLoading">
+              <span *ngIf="!isLoading">Send Message</span>
+              <span *ngIf="isLoading" class="loading-spinner">
+                <span class="spinner"></span> Sending...
+              </span>
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

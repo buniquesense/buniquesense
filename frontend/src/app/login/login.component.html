@@ -1,0 +1,27 @@
+<div class="container py-5">
+  <h3>Login</h3>
+
+  <form (ngSubmit)="login()">
+    <div class="mb-3">
+      <input type="email"
+             [(ngModel)]="email"
+             name="email"
+             class="form-control"
+             placeholder="Email"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <input type="password"
+             [(ngModel)]="password"
+             name="password"
+             class="form-control"
+             placeholder="Password"
+             required>
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="loading">
+      Login
+    </button>
+  </form>
+</div>

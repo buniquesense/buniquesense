@@ -1,0 +1,15 @@
+<div class="container py-4">
+  <h3>Users</h3>
+  <div *ngIf="loading">Loading…</div>
+  <div *ngFor="let u of users" class="card p-3 mb-2">
+    <div class="d-flex justify-content-between">
+      <div>
+        <strong>{{ u.fullName }}</strong> — {{ u.email }} <div class="small text-muted">Role: {{ u.role || 'user' }}</div>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-outline-primary" (click)="makeAdmin(u._id)">Make Admin</button>
+        <button class="btn btn-sm btn-info" (click)="makeGuide(u._id)">Make Guide</button>
+      </div>
+    </div>
+  </div>
+</div>

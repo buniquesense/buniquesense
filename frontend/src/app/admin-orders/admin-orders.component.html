@@ -1,0 +1,77 @@
+<div class="container py-4">
+  <h3>All Orders</h3>
+
+  <div *ngIf="loading">Loading…</div>
+
+  <div *ngFor="let o of orders" class="card mb-3 p-3">
+    <div class="d-flex justify-content-between card-inner">
+      <div>
+        <strong>Order:</strong> #{{ o._id }} <br>
+        <strong>User:</strong> {{ o.user?.fullName }} ({{ o.user?.email }}) <br>
+        <strong>Product:</strong> {{ o.product?.name }}<br>
+        <strong>Amount:</strong> ₹{{ o.amount }}<br>
+        <strong>Tracking:</strong> {{ o.shipment?.trackingNumber || 'n/a' }}
+        <div>
+          <!-- Inside your *ngFor="let o of orders" -->
+        <span *ngIf="o.assignedGuide">
+         <strong>Assigned Guide:</strong> {{ o.assignedGuide.fullName }}
+        </span>
+        <span *ngIf="!o.assignedGuide" class="text-danger">
+          Guide needs to be assigned
+        </span>
+
+        </div>
+      </div>
+
+      <div style="text-align:right">
+        <strong>Status:</strong> 
+        <span class="badge bg-primary">{{ o.shipment?.status || 'pending' }}</span>
+        <br>
+        <small *ngIf="o.shipment?.updatedAt">Updated: {{ o.shipment.updatedAt | date:'short' }}</small>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-warning btn-sm" (click)="openAssignGuideModal(o)">Assign Guide</button>
+      <button class="btn btn-sm btn-warning me-2" (click)="dispatchManual(o._id)">Dispatch (Manual)</button>
+      <button class="btn btn-sm btn-success" (click)="dispatchShiprocket(o._id)">Dispatch (Shiprocket)</button>
+    </div>
+
+    <div class="mt-3">
+      <app-shipment-progress [status]="o.shipment?.status || 'pending'"></app-shipment-progress>
+    </div>
+  </div>
+</div>
+
+
+<!-- modal code -->
+<!-- ASSIGN GUIDE MODAL -->
+<div class="modal" tabindex="-1" [class.show]="showGuideModal" style="display: block;" *ngIf="showGuideModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Assign Guide</h5>
+        <button type="button" class="btn-close" (click)="closeGuideModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <label class="form-label">Select Guide</label>
+        <select class="form-control" [(ngModel)]="selectedGuideId">
+          <option value="">-- Select Guide --</option>
+          <option *ngFor="let g of guides" [value]="g._id">
+            {{ g.fullName }} — {{ g.email }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeGuideModal()">Close</button>
+        <button class="btn btn-primary" (click)="submitAssignGuide()">Assign</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

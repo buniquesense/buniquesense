@@ -1,0 +1,67 @@
+<div class="heading">
+    <div class="heading-text">
+        <h1>Voices of Transformation</h1>
+    <p>Every participant's journey is a story of devotion, discipline, and self-discovery. Here are some glimpses and reflections from our growing community.</p>
+        <img src="assets/images/bottom-curve.png" alt="border">
+    </div>
+</div>
+
+<div class="container">
+
+  <!-- Photo Gallery Section -->
+  <h2 class="section-title">📷 Photo Gallery</h2>
+  <div class="photo-gallery">
+    <div 
+      *ngFor="let item of galleryItems; let i = index" 
+      class="gallery-item"
+      (click)="openModal(i)">
+      <img [src]="item.imageUrl" [alt]="item.description">
+      <div class="gallery-overlay">
+        <p>{{ item.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Gallery Section -->
+  <h2 class="section-title">🎥 Video Testimonials</h2>
+  <div class="video-gallery">
+    <div *ngFor="let video of videoItems" class="video-item">
+      <div class="video-thumbnail" (click)="playVideo(video)">
+        <div class="play-button">▶</div>
+      </div>
+      <div class="video-info">
+        <h3>{{ video.title }}</h3>
+        <p>{{ video.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Written Testimonials Section -->
+  <h2 class="section-title">💬 Written Testimonials</h2>
+  <div class="testimonials">
+    <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+      <div class="quote-icon">"</div>
+      <p class="testimonial-text">{{ testimonial.text }}</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">{{ testimonial.authorInitial }}</div>
+        <div class="author-info">
+          <div class="author-name">{{ testimonial.authorName }}</div>
+          <div class="author-location">{{ testimonial.location }}</div>
+          <div class="stars">{{ getStars(testimonial.rating) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for enlarged images -->
+<div 
+  class="modal" 
+  [class.active]="isModalOpen" 
+  (click)="closeModal()">
+  <span class="modal-close">&times;</span>
+  <img 
+    class="modal-content" 
+    [src]="selectedImage" 
+    *ngIf="selectedImage">
+</div>

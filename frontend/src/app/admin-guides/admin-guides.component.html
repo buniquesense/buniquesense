@@ -1,0 +1,140 @@
+<div class="container py-4">
+  <h3>Guides</h3>
+
+  <div class="card p-3 mb-3">
+    <div class="row">
+      <div class="col-md-3"><input [(ngModel)]="newGuide.fullName" class="form-control" placeholder="Full Name" /></div>
+      <div class="col-md-3"><input [(ngModel)]="newGuide.phoneNumber" class="form-control" placeholder="Phone" /></div>
+      <div class="col-md-3"><input [(ngModel)]="newGuide.email" class="form-control" placeholder="Email" /></div>
+      <div class="col-md-2"><input [(ngModel)]="newGuide.password" type="password" class="form-control" placeholder="Password" /></div>
+      <div class="col-md-1"><button class="btn btn-primary" (click)="create()">Add</button></div>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-3 shadow-sm" *ngFor="let g of guides">
+
+  <div class="d-flex justify-content-between">
+    <div>
+      <h5 class="mb-1">{{ g.fullName }}</h5>
+      <div class="text-muted">{{ g.email }}</div>
+      <div class="text-muted">{{ g.phoneNumber }}</div>
+
+      <span class="badge bg-info mt-2">
+        {{ g.students.length }} Students
+      </span>
+    </div>
+
+    <div>
+      <button class="btn btn-secondary btn-sm me-2" 
+              (click)="openStudentsModal(g)">
+        View Students
+      </button>
+
+      <button class="btn btn-warning btn-sm me-2"
+              (click)="openPasswordModal(g._id)">
+        Change Password
+      </button>
+
+      <button class="btn btn-danger btn-sm"
+              [disabled]="g.students.length > 0"
+              (click)="openDeleteModal(g._id, g.fullName)">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+<div class="modal" tabindex="-1" [class.show]="showDeleteModal" style="display: block;" *ngIf="showDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Confirm Delete</h5>
+        <button class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete guide <b>{{ deleteGuideName }}</b>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showStudentsModal" tabindex="-1" [class.show]="showStudentsModal" style="display:block;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5>Students of {{ selectedGuide.fullName }}</h5>
+        <button class="btn-close" (click)="closeStudentsModal()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div *ngIf="selectedGuide.students.length === 0" class="text-center text-muted">
+          No students assigned.
+        </div>
+
+        <div *ngFor="let s of selectedGuide.students" class="border rounded p-3 mb-2">
+
+          <h6>{{ s.user.fullName }}</h6>
+          <div>Email: {{ s.user.email }}</div>
+          <div>Phone: {{ s.user.phoneNumber }}</div>
+          <div>Product: {{ s.product.name }}</div>
+
+          <div class="mt-2">
+            <label>Select New Guide</label>
+            <select class="form-select" [(ngModel)]="selectedNewGuideId">
+              <option *ngFor="let g of guides" [value]="g._id" [disabled]="g._id === selectedGuide._id">
+                {{ g.fullName }}
+              </option>
+            </select>
+
+            <button class="btn btn-primary btn-sm mt-2"
+                    (click)="reassignStudent(s._id)">
+              Move Student
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeStudentsModal()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showPasswordModal" style="display:block;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5>Change Guide Password</h5>
+        <button class="btn-close" (click)="closePasswordModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <label>New Password</label>
+        <input type="password" class="form-control" [(ngModel)]="newPassword">
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closePasswordModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="submitPasswordChange()">Update</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

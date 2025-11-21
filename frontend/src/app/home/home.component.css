@@ -1,0 +1,347 @@
+/* General Layout */
+.hero {
+  background: #fffaf3;
+  padding: 4rem 0;
+  position: relative;
+}
+.hero-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.hero-left {
+  flex: 1 1 500px;
+}
+.hero-left h1 {
+  font-family: "Tiro Devanagari Hindi", serif;
+  color: #3b2e0a;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1rem;
+}
+.hero-left p {
+  color: #5b4d26;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.btn {
+  border-radius: 10px;
+  padding: 0.75rem 1.4rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.btn.dark {
+  background: #603814;
+  color: #fff;
+}
+.btn.outline {
+  border: 2px solid #b48b45;
+  color: #fff;
+}
+.btn.dark:hover {
+  background: #4e2e10;
+}
+.btn.outline:hover {
+  background: #b48b45;
+  color: #fff;
+}
+.hero-right img {
+  width: 380px;
+  border-radius: 10px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+}
+
+/* About Section */
+.about-section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 15px;
+  width: 80%;
+  margin: 0 auto;
+}
+.about-inner{
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  padding: 40px 0;
+}
+.about-img img{
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+.about {
+  background: #fff9f2;
+  padding: 4rem 0;
+}
+.about-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.about-text {
+  flex: 1 1 480px;
+}
+.about-content{
+  flex: 0 0 50%;
+}
+.about-img img{
+  width: 100%;
+  height: auto;
+}
+.about-video {
+  position: relative;
+  flex: 1 1 400px;
+}
+.about-video img {
+  width: 100%;
+  border-radius: 10px;
+}
+.play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #b48b45;
+  color: #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Icons */
+.icons {
+  background: #fffaf3;
+  text-align: center;
+}
+.icons-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+.icon-card img {
+  width: 50px;
+  margin-bottom: 0.5rem;
+}
+.icon-card h4 {
+  color: #3b2e0a;
+  font-weight: 600;
+}
+
+/* Testimonial */
+.testimonial {
+  background: #fdfaf5;
+  text-align: center;
+}
+.testimonial-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 2rem auto 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+.testimonial-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+.testimonial-content p {
+  color: #3f3b30;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.testimonial-content h5 {
+  color: #5b4d26;
+  font-weight: 600;
+}
+.writing-section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background: url(/assets/videos/krishna-arjuna.gif);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;  */
+  min-height: 400px;
+  width: 100%;
+}
+.writing-section h2{
+  display: inline-block;
+}
+.fixed-bg {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.fixed-bg::before {
+  content: "";
+  position: fixed; /* instead of background-attachment */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/videos/krishna-arjuna.gif');
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+.fixed-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(1px);
+  z-index: -1;
+}
+.fixed-bg {
+  background-attachment: scroll;
+  animation: parallaxScroll 20s ease-in-out infinite alternate;
+}
+.writing-section{
+  padding: 20px;
+
+}
+
+@keyframes parallaxScroll {
+  from { background-position: center top; }
+  to   { background-position: center bottom; }
+}
+
+.why-program{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 40px 0;
+}
+.why-program h2{
+  display: inline-block;
+  margin: 30px 0 50px;
+}
+
+.cards-section{
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin: 0 auto;
+  width: 80%;
+  flex-wrap: wrap;
+}
+.card{
+  box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+  transition: 0.3s ease-in-out;
+  transform: scale(1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  gap: 20px;
+  min-width: 270px;
+  background-color: #fff;
+  flex: 1 0 20%;
+}
+.card:hover{
+  transform: scale(1.1);
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+.card-text{
+  font-size: 23px;
+  color: #5b4d26;
+  font-weight: 600;
+  text-align: center;
+}
+.call-action{
+  background-color: #0b2a55;
+}
+.call-action-inner{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  width: 80%;
+  margin: 0 auto;
+}
+.call-action h2{
+  display: inline-block;
+}
+.call-action h2::after{
+  background-color: #fff;
+}
+.info-form{
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+.cont-info{
+  flex: 0 0 46%;
+  color: #fff;
+}
+.cont-form{
+  background-color: var(--accent);
+  border-radius: 6px;
+  padding: 15px;
+  width: 100%;
+}
+.form-field{
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+.form-field input, .form-field textarea, .form-field select{
+  border-radius: 0;
+}
+@media(max-width: 1024px){
+  .card{
+    flex: 0 0 46%;
+  }
+}
+@media(max-width: 997px){
+  .card{
+    flex: 0 0 46%;
+  }
+  .about-inner{
+    flex-direction: column-reverse;
+  }
+  .writing-section{
+    text-align: center;
+  }
+}
+/* Responsive */
+@media (max-width: 767px) {
+  .hero-right img {
+    width: 100%;
+  }
+  .info-form{
+    flex-direction: column;
+  }
+  .action-btns{
+    flex-direction: column;
+  }
+  .card{
+    flex: 0 0 100%;
+  }
+  .fixed-bg{
+    min-height: 45vh;
+  }
+}

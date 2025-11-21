@@ -1,0 +1,75 @@
+<div class="container py-4">
+  <h2 class="mb-3">➕ Add New Student</h2>
+
+  <div *ngIf="successMsg" class="alert alert-success">
+    {{ successMsg }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label>Name</label>
+        <input class="form-control" formControlName="fullName">
+      </div>
+
+      <div class="col-md-4">
+        <label>Email</label>
+        <input class="form-control" formControlName="email">
+      </div>
+
+      <div class="col-md-4">
+        <label>Phone</label>
+        <input class="form-control" formControlName="phoneNumber">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label>Password</label>
+        <input type="password" class="form-control" formControlName="password">
+      </div>
+
+      <div class="col-md-4">
+        <label>City</label>
+        <input class="form-control" formControlName="city">
+      </div>
+
+      <div class="col-md-4">
+        <label>State</label>
+        <input class="form-control" formControlName="state">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label>Address</label>
+      <textarea class="form-control" rows="2" formControlName="address"></textarea>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Product</label>
+        <select class="form-control" formControlName="productId">
+          <option value="">-- select product --</option>
+          <option *ngFor="let p of products" [value]="p._id">
+            {{ p.name }} (₹{{ p.price }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label>Order Status</label>
+        <select class="form-control" formControlName="status">
+          <option *ngFor="let s of orderStatusOptions" [value]="s.value">
+            {{ s.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" [disabled]="loading">
+      {{ loading ? "Processing..." : "Create Student" }}
+    </button>
+
+  </form>
+</div>

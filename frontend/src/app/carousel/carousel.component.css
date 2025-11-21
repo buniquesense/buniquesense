@@ -1,0 +1,75 @@
+/* .carousel { top: 6em; } */
+.carousel-indicators { z-index: 0 !important; }
+.carousel-caption { top: 40%; text-align: left !important; }
+
+.carousel-caption h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 2px 2px rgba(0, 19, 169, 1);
+}
+.carousel-caption p {
+  font-size: 1.05rem;
+  color: #fff;
+  max-width: 600px;
+}
+.carousel-item img{
+    height: auto;
+    max-height: 650px;
+    object-fit: cover;
+    min-height: 300px;
+}
+/* slide-in animation */
+.slide-in-right, .slide-in-right1, .slide-in-right2 {
+  animation: slide-in-right 1.5s cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+@keyframes slide-in-right {
+  0% { transform: translateX(1000px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.slide-in-bottom, .slide-in-bottom1, .slide-in-bottom2 {
+  animation: slide-in-bottom 1.5s cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+@keyframes slide-in-bottom {
+  0% { transform: translateY(1000px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ken burns */
+.kenburns-top, .kenburns-top1, .kenburns-top2 {
+  animation: kenburns-top 6s ease-out both;
+}
+@keyframes kenburns-top {
+  0% { transform: scale(1) translateY(0); transform-origin: 50% 16%; }
+  100% { transform: scale(1.25) translateY(-15px); transform-origin: top; }
+}
+/* Overlay for carousel images */
+.carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(7, 15, 35, 0.55); /* navy-gold spiritual tone overlay */
+  backdrop-filter: blur(1px);        /* subtle blur */
+  z-index: 1;
+}
+
+/* Ensure captions show above overlay */
+.carousel-caption {
+  position: absolute;
+  z-index: 2;
+}
+
+/* Optional: smooth fade effect */
+.carousel-item img {
+  filter: brightness(85%);
+}
+/* responsive */
+@media (max-width: 768px) {
+  .carousel-caption { top: 30%; }
+  .carousel-caption h3 { font-size: 1.6rem; }
+  .carousel-caption p { font-size: 1rem; }
+}

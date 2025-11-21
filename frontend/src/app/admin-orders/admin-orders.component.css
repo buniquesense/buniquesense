@@ -1,0 +1,36 @@
+.orders-container {
+  padding: 20px;
+}
+
+.order-card {
+  border: 1px solid #ddd;
+  padding: 18px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.btn-assign {
+  background: #2c7be5;
+  padding: 8px 18px;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  margin-right: 10px;
+}
+
+.btn-dispatch {
+  background: #28a745;
+  padding: 8px 18px;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+}
+.card { border-radius: 8px; background: #fff; }
+
+@media(max-width: 767px){
+  .card-inner{
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+}

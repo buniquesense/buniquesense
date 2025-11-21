@@ -1,0 +1,19 @@
+.card {
+  border-radius: 16px !important;
+}
+
+.badge {
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.btn-success {
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-light {
+  border-radius: 10px;
+  font-weight: 600;
+}

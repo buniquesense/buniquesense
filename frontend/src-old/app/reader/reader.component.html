@@ -1,0 +1,18 @@
+<div class="container reader">
+  <a routerLink="/" class="btn" style="background:var(--brand);color:#fff;margin-bottom:1rem;display:inline-block">← Back</a>
+
+  <div *ngIf="loading">Loading…</div>
+  <div *ngIf="error">{{error}}</div>
+
+  <h2 *ngIf="chapter" style="color:var(--brand)">{{chapter.title}}</h2>
+
+  <div *ngIf="chapter">
+    <div class="shloka"
+         *ngFor="let s of chapter.shlokas"
+         (click)="pulse($event.currentTarget)">
+      <div class="sanskrit">{{s.sanskrit}}</div>
+      <div class="translit">{{s.transliteration}}</div>
+      <div class="translation">{{s.translation}}</div>
+    </div>
+  </div>
+</div>
