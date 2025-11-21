@@ -82,6 +82,9 @@
 .close-btn {
   display: none;
 }
+.overlay {
+  display: none;
+}
 
 /* MOBILE */
 @media (max-width: 768px) {
