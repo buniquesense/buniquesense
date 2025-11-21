@@ -13,9 +13,6 @@
   "start:backend": "npm start --prefix ../backend",
   "start:all": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
   },
-  "devDependencies": {
-    "concurrently": "^8.2.0"
-  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
@@ -43,7 +40,8 @@
     "operators": "^1.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "concurrently": "^8.2.0"
   },
   "devDependencies": {
     "@angular/build": "^20.3.7",
