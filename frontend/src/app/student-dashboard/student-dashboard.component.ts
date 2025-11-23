@@ -4,6 +4,8 @@ import { OrderService } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+  
 
 @Component({
   selector: 'app-student-dashboard',
@@ -13,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./student-dashboard.component.css']
 })
 export class StudentDashboardComponent implements OnInit {
+
+  base = environment.apiUrl;
 
   user: any = null;
   order: any = null;
@@ -72,9 +76,9 @@ export class StudentDashboardComponent implements OnInit {
   loadData() {
     this.loading = true;
 
-    this.http.get(`/api/student/dashboard`).subscribe({
+    this.http.get(environment.apiUrl + '/student/dashboard').subscribe({
       next: (res: any) => {
-        this.user = res.user;
+        this.user = res.user || {};
         this.order = res.order;
 
         if (this.order) {

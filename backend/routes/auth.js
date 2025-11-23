@@ -40,7 +40,19 @@ router.post('/login', async (req, res) => {
   const ok = await u.validatePassword(password);
   if(!ok) return res.status(401).json({message:'Invalid'});
   const token = jwt.sign({ id: u._id, role: u.role }, jwtSecret, { expiresIn: '7d' });
-  res.json({ token, user: { id:u._id, email:u.email, fullName:u.fullName, role:u.role }});
+  res.json({
+  token,
+  user: {
+    id: u._id,
+    fullName: u.fullName,
+    email: u.email,
+    phoneNumber: u.phoneNumber,
+    address: u.address,
+    city: u.city,
+    state: u.state,
+    role: u.role
+  }
+});
 });
 
 module.exports = router;
