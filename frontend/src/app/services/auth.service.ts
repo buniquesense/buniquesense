@@ -8,6 +8,7 @@ export class AuthService {
 
   private tokenKey = 'auth_token';
   private roleKey = 'auth_role';
+  private userKey = 'auth_user';
 
   constructor(private http: HttpClient) {}
 
@@ -28,8 +29,17 @@ login(payload: any) {
   // -----------------------
   // REGISTER
   // -----------------------
-  register(payload: any) {
-    return this.http.post(`${environment.apiUrl}/auth/register`, payload);
+   register(payload: any) {
+    return this.http.post(`${environment.apiUrl}/auth/register`, payload).pipe(
+      tap((res: any) => {
+        // Some backends return user & token on register, some don't.
+        if (res?.token && res?.user) {
+          localStorage.setItem(this.tokenKey, res.token);
+          localStorage.setItem(this.roleKey, res.user.role);
+          localStorage.setItem(this.userKey, JSON.stringify(res.user)); // <-- FIXED
+        }
+      })
+    );
   }
 
   // -----------------------
@@ -37,6 +47,11 @@ login(payload: any) {
   // -----------------------
   isLoggedIn(): boolean {
     return !!localStorage.getItem(this.tokenKey);
+  }
+
+  getUser(): any {
+    const u = localStorage.getItem(this.userKey);
+    return u ? JSON.parse(u) : null;
   }
 
   // -----------------------
