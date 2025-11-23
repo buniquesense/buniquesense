@@ -67,6 +67,11 @@ export class JoinUsComponent {
         localStorage.setItem('auth_token', reg.token);
         localStorage.setItem('auth_role', reg.user?.role || 'student');
       }
+      if (reg.token) {
+        localStorage.setItem('auth_token', reg.token);
+        localStorage.setItem('auth_role', reg.user?.role || 'student');
+        localStorage.setItem('auth_user', JSON.stringify(reg.user));  // <-- FIX
+      }
 
       // STEP 2 — Confirm login
       const loginResp: any = await this.auth.login({
@@ -77,7 +82,8 @@ export class JoinUsComponent {
       // Store correct login token
       localStorage.setItem('auth_token', loginResp.token);
       localStorage.setItem('auth_role', loginResp.user.role);
-
+      localStorage.setItem('auth_user', JSON.stringify(loginResp.user));
+      
       const paymentOption = this.f['paymentOption'].value;
 
       // STEP 3 — Razorpay flow
