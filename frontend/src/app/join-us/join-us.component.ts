@@ -97,19 +97,26 @@ export class JoinUsComponent {
           handler: async (razorResp: any) => {
             try {
               // Step 1: verify payment on backend
-              await this.orderSvc.verifyPayment({
+              const verifyRes: any = await this.orderSvc.verifyPayment({
                 razorpay_order_id: razorResp.razorpay_order_id,
                 razorpay_payment_id: razorResp.razorpay_payment_id,
                 razorpay_signature: razorResp.razorpay_signature,
                 localOrderId
               }).toPromise();
 
-              // Step 2: set success flag
+              // ⭐️ Save token + student data so dashboard works
+              if (verifyRes?.student) {
+                localStorage.setItem('auth_token', verifyRes.token);
+                localStorage.setItem('auth_role', verifyRes.student.role);
+                localStorage.setItem('student', JSON.stringify(verifyRes.student));
+              }
+
+              // Step 2: success message
               this.isSubmitted = true;
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              // Step 3: small delay for animation/message
+
+              // Step 3: redirect
               setTimeout(() => {
-                // Step 4: redirect student to dashboard
                 window.location.href = '/student/dashboard';
               }, 1500);
 
@@ -119,8 +126,7 @@ export class JoinUsComponent {
             } finally {
               this.isLoading = false;
             }
-          }
-,
+          },
 
           prefill: {
             name: payload.fullName,
