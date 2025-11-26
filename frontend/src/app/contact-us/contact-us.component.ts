@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { SuccessMessageComponent } from '../success-message/success-message.component';
 
 interface ContactInfo {
   icon: string;
@@ -18,7 +21,7 @@ interface SocialLink {
 
 @Component({
   selector: 'app-contact-us.component',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SuccessMessageComponent],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css',
 })
@@ -75,7 +78,7 @@ export class ContactUsComponent {
     }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -88,27 +91,25 @@ export class ContactUsComponent {
     return this.contactForm.controls;
   }
 
-  onSubmit(): void {
-    if (this.contactForm.valid) {
-      this.isLoading = true;
-      
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Contact Form Data:', this.contactForm.value);
-        this.isLoading = false;
-        this.isSubmitted = true;
-        
-        // Reset form after 5 seconds
-        setTimeout(() => {
-          this.resetForm();
-        }, 5000);
-      }, 2000);
-    } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.contactForm.controls).forEach(key => {
-        this.contactForm.get(key)?.markAsTouched();
+  onSubmit() {
+    if (this.contactForm.invalid) return;
+
+    this.isLoading = true;
+    this.isSubmitted = false;
+
+    this.http.post(`${environment.apiUrl}/contact/contact`, this.contactForm.value)
+      .subscribe({
+        next: () => {
+          // alert("Your message has been sent!");
+          this.isSubmitted = true;
+          this.contactForm.reset();
+          this.isLoading = false;
+        },
+        error: () => {
+          alert("Failed to send message.");
+          this.isLoading = false;
+        }
       });
-    }
   }
 
   resetForm(): void {

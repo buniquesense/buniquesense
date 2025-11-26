@@ -189,6 +189,7 @@
   position: relative;
   min-height: 100vh;
   overflow: hidden;
+  background-attachment: fixed;
 }
 
 .fixed-bg::before {
@@ -198,9 +199,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/assets/videos/krishna-arjuna.gif');
+  /* background-image: url('/assets/videos/krishna-arjuna.gif'); */
+  background-image: url('/assets/images/fixed-bg.jpg');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   z-index: -1;
 }
 .fixed-bg::after {
@@ -210,7 +213,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.7);
   backdrop-filter: blur(1px);
   z-index: -1;
 }
@@ -311,6 +314,39 @@
 .form-field input, .form-field textarea, .form-field select{
   border-radius: 0;
 }
+.send-btn {
+  background: #3a4be3;
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  width: 100%;
+}
+
+.send-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loader {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  border-top: 3px solid transparent;
+  animation: spin 0.7s linear infinite;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 @media(max-width: 1024px){
   .card{
     flex: 0 0 46%;

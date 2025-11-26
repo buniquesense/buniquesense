@@ -66,12 +66,14 @@
       <div class="form-section">
         
         <!-- Success Message -->
-        <div class="success-card" *ngIf="isSubmitted">
+        <!-- <div class="success-card" *ngIf="isSubmitted">
           <div class="success-icon">✓</div>
           <h2>Message Sent Successfully!</h2>
           <p>Thank you for reaching out. We'll get back to you within 24-48 hours.</p>
           <button class="btn-secondary" (click)="resetForm()">Send Another Message</button>
-        </div>
+        </div> -->
+
+        <success-message *ngIf="isSubmitted"></success-message>
 
         <!-- Contact Form -->
         <div class="form-card" *ngIf="!isSubmitted">

@@ -9,7 +9,8 @@ const orderRoutes = require('./routes/order');
 const adminRoutes = require('./routes/admin');
 const studentRoutes = require("./routes/student");
 const guideRoutes = require('./routes/guide');
-const cloudUpload = require('./routes/upload')
+const cloudUpload = require('./routes/upload');
+const contactRoutes = require("./routes/contact");
 
 const app = express();
 app.use(cors());
@@ -27,7 +28,8 @@ app.use('/api/order', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use("/api/student", studentRoutes);
 app.use('/api/guide', guideRoutes);
-app.use('/api/upload', cloudUpload)
+app.use('/api/upload', cloudUpload);
+app.use("/api/contact", contactRoutes);
 
 // error handler
 app.use((err, req, res, next) => {
