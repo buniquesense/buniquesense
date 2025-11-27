@@ -35,11 +35,11 @@ getOrderById(id: string) {
     return this.http.get(`${this.base}/${orderId}/shipment-status`);
   }
 getGuideStudent(id: string) {
-  return this.http.get(`/api/order/guide/student/${id}`);
+  return this.http.get(`${environment.apiUrl}/order/guide/student/${id}`);
 }
 
 listAssignedToGuide() {
-  return this.http.get(`/api/order/guide/students`);
+  return this.http.get(`${environment.apiUrl}/order/guide/students`);
 }
   
 }

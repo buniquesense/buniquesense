@@ -63,7 +63,7 @@ export class StudentDashboardComponent implements OnInit {
   refreshTracking() {
     if (!this.order?._id) return;
 
-    this.http.get(`/api/order/track/${this.order._id}`).subscribe({
+    this.http.get(`${environment.apiUrl}/order/track/${this.order._id}`).subscribe({
       next: (res: any) => {
         this.order.shipment = res;
         this.calculateProgress(this.order.status);
