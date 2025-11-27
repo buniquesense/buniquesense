@@ -423,6 +423,119 @@ router.post('/guides/change-student-guide', async (req, res) => {
   }
 });
 
+// ------------------------------
+// CREATE ADMIN / GUIDE (ADMIN ONLY)
+// POST /admin/users
+// body: { fullName, email, phoneNumber, password, role } role = 'admin'|'guide'
+// ------------------------------
+router.post('/users', async (req, res) => {
+  try {
+    const { fullName, email, phoneNumber, password, role } = req.body;
+    if (!fullName || !email || !password || !role) {
+      return res.status(400).json({ message: 'Missing fields' });
+    }
+    if (!['admin','guide'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(422).json({ message: 'Email already exists' });
+
+    const u = new User({ fullName, email, phoneNumber, role });
+    await u.setPassword(password);
+    await u.save();
+
+    res.json({ ok: true, user: { id: u._id, fullName: u.fullName, email: u.email, role: u.role }});
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Failed to create user' });
+  }
+});
+
+// ------------------------------
+// UPDATE ROLE (toggle or set)
+// POST /admin/users/:id/role
+// body: { role } role = 'admin'|'guide'
+// ------------------------------
+router.post('/users/:id/role', async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!role || !['admin','guide'].includes(role)) return res.status(400).json({ message: 'Invalid role' });
+
+    const u = await User.findById(req.params.id);
+    if (!u) return res.status(404).json({ message: 'User not found' });
+
+    u.role = role;
+    await u.save();
+    res.json({ ok: true, user: u });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Failed to update role' });
+  }
+});
+
+// ------------------------------
+// LIST STUDENTS
+// GET /admin/students
+// returns users with role=student (no passwordHash)
+// ------------------------------
+router.get('/students', async (req, res) => {
+  try {
+    const students = await User.find({ role: 'student' }, '-passwordHash');
+    res.json(students);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Failed to load students' });
+  }
+});
+
+// ------------------------------
+// ASSIGN GUIDE TO STUDENT
+// POST /admin/students/:userId/assign-guide
+// body: { guideId }
+// This will find the latest order for the student and set assignedGuide
+// ------------------------------
+router.post('/students/:userId/assign-guide', async (req, res) => {
+  try {
+    const { guideId } = req.body;
+    const { userId } = req.params;
+
+    const guide = await User.findById(guideId);
+    if (!guide || guide.role !== 'guide') return res.status(400).json({ message: 'Invalid guide' });
+
+    // find the most recent order for this student
+    const order = await Order.findOne({ user: userId }).sort({ createdAt: -1 });
+    if (!order) return res.status(404).json({ message: 'Student order not found' });
+
+    order.assignedGuide = guideId;
+    await order.save();
+
+    res.json({ ok: true, order });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Failed to assign guide' });
+  }
+});
+
+// ADMIN: change any user's password (admin only)
+router.post('/users/:id/change-password', async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password) return res.status(400).json({ message: 'Password required' });
+
+    const u = await User.findById(req.params.id);
+    if (!u) return res.status(404).json({ message: 'User not found' });
+
+    await u.setPassword(password);
+    await u.save();
+
+    res.json({ ok: true, message: 'Password updated' });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Failed to change password' });
+  }
+});
+
 
 
 

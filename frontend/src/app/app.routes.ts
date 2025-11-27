@@ -18,6 +18,7 @@ import { StudentDashboardComponent } from './student-dashboard/student-dashboard
 import { GuideDashboardComponent } from './guide-dashboard/guide-dashboard.component';
 import { GuideStudentComponent } from './guide-student/guide-student.component';
 import { GuideGuard } from './guards/guide.guard';
+import { AdminStudentsComponent } from './admin-students/admin-students.component';
 // import { AboutComponent } from './pages/about.component';
 // import { ProgramComponent } from './pages/program.component';
 // import { GalleryComponent } from './pages/gallery.component';
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'products', component: AdminProductsComponent },
       { path: 'guides', component: AdminGuidesComponent },
       { path: 'users', component: AdminUsersComponent },
+      { path: 'students', component: AdminStudentsComponent },
       {
         path: 'add-student',
         loadComponent: () =>

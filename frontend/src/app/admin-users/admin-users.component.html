@@ -1,15 +1,102 @@
 <div class="container py-4">
-  <h3>Users</h3>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3>Users (Admins & Guides)</h3>
+    <button class="btn btn-primary" (click)="openAddUser()">Add User</button>
+  </div>
+
   <div *ngIf="loading">Loading…</div>
-  <div *ngFor="let u of users" class="card p-3 mb-2">
-    <div class="d-flex justify-content-between">
+
+  <div *ngIf="!loading && filteredUsers.length === 0" class="text-muted">No admins or guides yet</div>
+
+  <div *ngFor="let u of filteredUsers" class="card p-3 mb-2">
+    <div class="d-flex justify-content-between align-items-center">
       <div>
-        <strong>{{ u.fullName }}</strong> — {{ u.email }} <div class="small text-muted">Role: {{ u.role || 'user' }}</div>
+        <strong>{{ u.fullName }}</strong> — {{ u.email }}
+        <div class="small text-muted">Role: {{ u.role || 'user' }}</div>
       </div>
-      <div>
-        <button class="btn btn-sm btn-outline-primary" (click)="makeAdmin(u._id)">Make Admin</button>
-        <button class="btn btn-sm btn-info" (click)="makeGuide(u._id)">Make Guide</button>
+
+      <div class="d-flex gap-2">
+        <button *ngIf="u.role !== 'admin'" class="btn btn-sm btn-outline-primary" (click)="changeRole(u._id, 'admin')">Make Admin</button>
+        <button *ngIf="u.role === 'admin'" class="btn btn-sm btn-outline-secondary" (click)="changeRole(u._id, 'guide')">Make Guide</button>
+
+        <button class="btn btn-sm btn-info" (click)="openChangePassword(u)">Change Password</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Add User Modal -->
+<div class="modal-backdrop" *ngIf="showAddUser">
+  <div class="modal-card">
+    <h4>Add User</h4>
+    <form (ngSubmit)="submitAddUser(addUserForm)" #addUserForm="ngForm" novalidate>
+      <div class="form-group">
+        <label>Name</label>
+        <input ngModel name="fullName" required class="form-control" #nameRef="ngModel" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input ngModel name="email" type="email" required class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input ngModel name="phoneNumber" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input ngModel name="password" type="password" required class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select ngModel name="role" required class="form-control">
+          <option value="admin">Admin</option>
+          <option value="guide">Guide</option>
+        </select>
+      </div>
+
+      <div class="mt-3 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeAddUser()">Cancel</button>
+        <button [disabled]="addingUser" type="submit" class="btn btn-primary">
+          <span *ngIf="!addingUser">Add</span>
+          <span *ngIf="addingUser">Adding…</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- simple modal CSS should exist in component css -->
+
+<!-- Change Password Modal -->
+<div class="modal-backdrop" *ngIf="showChangePwdModal">
+  <div class="modal-card">
+    <h4>Change Password for <strong>{{ selectedUserForPwd?.fullName }}</strong></h4>
+
+    <form #changePwdForm="ngForm" (ngSubmit)="submitChangePassword(changePwdForm)" novalidate>
+      <div class="form-group">
+        <label>New Password</label>
+        <input
+          name="password"
+          ngModel
+          type="password"
+          minlength="6"
+          required
+          class="form-control"
+          placeholder="Enter new password (min 6 chars)" />
+      </div>
+
+      <div *ngIf="changePwdError" class="text-danger mt-2">{{ changePwdError }}</div>
+      <div *ngIf="changePwdSuccess" class="text-success mt-2">Password changed successfully</div>
+
+      <div class="mt-3 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeChangePassword()" [disabled]="isChangingPassword">Cancel</button>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isChangingPassword || changePwdForm.invalid">
+          <span *ngIf="!isChangingPassword">Change Password</span>
+          <span *ngIf="isChangingPassword">Changing…</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
