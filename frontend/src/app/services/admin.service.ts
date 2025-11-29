@@ -170,4 +170,8 @@ export class AdminService {
     return this.http.get(`${this.base}/guides-with-students`, this.authHeaders());
   }
 
+  getShiprocketLabel(orderId: string) {
+    return this.http.get(`${this.base}/orders/${orderId}/label`, this.authHeaders());
+  }
+
 }

@@ -5,6 +5,8 @@ const ShipmentSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending','dispatched','in_transit','out_for_delivery','delivered','cancelled'], default: 'pending'},
   trackingNumber: String,
   courierName: String,
+  labelUrl: String,
+  shipmentId: String,
   history: [{ status: String, message: String, at: Date }],
   createdAt: { type: Date, default: Date.now }
 });

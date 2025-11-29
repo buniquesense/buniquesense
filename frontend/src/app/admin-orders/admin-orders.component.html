@@ -25,6 +25,12 @@
 
       <div style="text-align:right">
         <strong>Status:</strong> 
+        <button
+          *ngIf="o.shipment?.labelUrl"
+          class="btn btn-info btn-sm mt-2"
+          (click)="downloadLabel(o._id)">
+          Download Shipping Label
+        </button>
         <span class="badge bg-primary">{{ o.shipment?.status || 'pending' }}</span>
         <br>
         <small *ngIf="o.shipment?.updatedAt">Updated: {{ o.shipment.updatedAt | date:'short' }}</small>

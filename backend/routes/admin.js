@@ -38,82 +38,8 @@ router.post('/orders/:id/assign-guide', async (req, res) => {
 
 
 // ------------------------------
-// DISPATCH ORDER
+// REAL SHIPROCKET DISPATCH
 // ------------------------------
-// router.post('/orders/:id/dispatch', async (req, res) => {
-//   const { method, trackingNumber, courierName } = req.body;
-//   const order = await Order.findById(req.params.id).populate('user product');
-//   if (!order) return res.status(404).json({ message: 'Order not found' });
-
-//   // MANUAL MODE
-//   if (method === 'manual') {
-//     order.shipment = {
-//       method: 'manual',
-//       status: 'dispatched',
-//       trackingNumber,
-//       courierName,
-//       history: [{ status: 'dispatched', message: `Manually dispatched`, at: new Date() }]
-//     };
-//     order.status = 'dispatched';
-//     await order.save();
-//     return res.json(order);
-//   }
-
-//   // SHIPROCKET MODE
-//   if (method === 'shiprocket') {
-//     try {
-//       const token = await getShiprocketToken();
-
-//       const payload = {
-//         order_id: `ORD_${order._id}`,
-//         order_date: new Date().toISOString(),
-//         pickup_location: process.env.SR_PICKUP_LOCATION_ID,
-//         billing_customer_name: order.user.fullName,
-//         billing_address: order.user.address,
-//         billing_city: order.user.city,
-//         billing_pincode: order.user.pincode || '000000',
-//         billing_state: order.user.state,
-//         billing_email: order.user.email,
-//         billing_phone: order.user.phoneNumber,
-//         sub_total: order.amount,
-//         length: 10, breadth: 10, height: 10, weight: 0.5,
-//         items: [{
-//           name: order.product.name,
-//           sku: order.product.sku || 'KIT',
-//           units: order.quantity,
-//           taxable_value: order.amount,
-//           hsn: 9999
-//         }]
-//       };
-
-//       const resp = await axios.post(
-//         'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
-//         payload,
-//         { headers: { Authorization: `Bearer ${token}` } }
-//       );
-
-//       order.shipment = {
-//         method: 'shiprocket',
-//         status: 'dispatched',
-//         trackingNumber: resp.data.tracking_number || '',
-//         courierName: resp.data.courier_company || '',
-//         history: [{ status: 'dispatched', message: 'Shipped via Shiprocket', at: new Date() }]
-//       };
-//       order.status = 'dispatched';
-//       await order.save();
-
-//       return res.json({ ok: true, order });
-//     } catch (err) {
-//       console.error(err.response?.data || err.message);
-//       return res.status(500).json({ message: 'Shiprocket error', details: err.response?.data || err.message });
-//     }
-//   }
-
-//   res.status(400).json({ message: 'Invalid dispatch method' });
-// });
-
-
-// mock DISPATCH ORDER disable it in live
 router.post('/orders/:id/dispatch', async (req, res) => {
   const { method, trackingNumber, courierName } = req.body;
   const order = await Order.findById(req.params.id).populate('user product');
@@ -128,9 +54,7 @@ router.post('/orders/:id/dispatch', async (req, res) => {
       status: 'dispatched',
       trackingNumber,
       courierName,
-      history: [
-        { status: 'dispatched', message: `Manually dispatched`, at: new Date() }
-      ]
+      history: [{ status: 'dispatched', message: `Manual dispatch`, at: new Date() }]
     };
 
     order.status = 'dispatched';
@@ -139,24 +63,119 @@ router.post('/orders/:id/dispatch', async (req, res) => {
   }
 
   // -------------------------------------
-  // MOCK SHIPROCKET DISPATCH (no API call)
+  // SHIPROCKET DISPATCH
   // -------------------------------------
-  if (method === 'shiprocket') {
-    // Generate fake tracking info
-    const fakeTracking = "MOCK-SR-" + Math.floor(Math.random() * 99999999);
-    const fakeCourier = "Shiprocket Demo Courier";
+  
+if (method === 'shiprocket') {
+  try {
+    const token = await getShiprocketToken();
 
-    order.shipment = {
-      method: 'shiprocket',
-      status: 'dispatched',
-      trackingNumber: fakeTracking,
-      courierName: fakeCourier,
-      history: [
+    // -------------------------------
+    // 1️⃣ Correct Shiprocket Payload
+    // -------------------------------
+    const payload = {
+      order_id: `ORD_${order._id}`,
+      order_date: new Date().toISOString(),
+      pickup_location: process.env.SR_PICKUP_LOCATION_ID || process.env.SR_PICKUP_LOCATION,
+
+      billing_customer_name: order.user.fullName,
+      billing_last_name: "",
+      billing_address: order.user.address,
+      billing_city: order.user.city,
+      billing_pincode: order.user.pincode || "500001",
+      billing_state: order.user.state,
+      billing_country: "India",
+      billing_email: order.user.email,
+      billing_phone: order.user.phoneNumber,
+
+      shipping_is_billing: true,
+      payment_method: "Prepaid",
+
+      order_items: [
         {
-          status: "dispatched",
-          message: "Shipment created (Mock Shiprocket Mode)",
-          at: new Date()
+          name: order.product.name || "Product",
+          sku: order.product.sku || "KIT-001",
+          units: order.quantity || 1,
+          selling_price: order.amount,
+          discount: 0,
+          tax: 0
         }
+      ],
+
+      sub_total: order.amount,
+      length: 10,
+      breadth: 10,
+      height: 10,
+      weight: 0.5
+    };
+
+    // -------------------------------
+    // 2️⃣ Create Shiprocket Order
+    // -------------------------------
+    // 1️⃣ Create Order
+      const createOrder = await axios.post(
+        "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc",
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log("SR Order Response:", createOrder.data);
+
+      // Extract proper values
+      const srOrderId =
+        createOrder.data.order_id ||
+        createOrder.data.data?.order_id;
+
+      const shipmentId =
+        createOrder.data.shipment_id ||
+        createOrder.data.data?.shipment_id;
+
+      if (!srOrderId || !shipmentId) {
+        console.error("Shiprocket Order Creation Failed:", createOrder.data);
+        return res.status(500).json({
+          message: "Shiprocket order creation failed",
+          details: createOrder.data
+        });
+      }
+
+      console.log("SR ORDER ID:", srOrderId);
+      console.log("SHIPMENT ID:", shipmentId);
+
+
+      // 2️⃣ Generate AWB
+      const awbRes = await axios.post(
+        "https://apiv2.shiprocket.in/v1/external/courier/assign/awb",
+        { shipment_id: shipmentId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log("AWB RESPONSE:", awbRes.data);
+
+      const awb = awbRes.data.response.data.awb_code;
+
+
+    // -------------------------------
+    // 4️⃣ Generate Label
+    // -------------------------------
+    const labelRes = await axios.get(
+      `https://apiv2.shiprocket.in/v1/external/courier/generate/label?shipment_id=${shipmentId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const labelUrl = labelRes.data.label_url;
+
+    // -------------------------------
+    // 5️⃣ Save to Database
+    // -------------------------------
+    order.shipment = {
+      method: "shiprocket",
+      status: "dispatched",
+      trackingNumber: awb,
+      courierName: "Shiprocket",
+      labelUrl,
+      shipmentId,
+      history: [
+        { status: "dispatched", message: "Shipped via Shiprocket", at: new Date() }
       ]
     };
 
@@ -165,31 +184,128 @@ router.post('/orders/:id/dispatch', async (req, res) => {
 
     return res.json({
       ok: true,
-      message: "Mock Shiprocket dispatch successful",
+      message: "Shiprocket Dispatch Success",
       order
     });
-  }
 
-  // -------------------------------------
-  // INVALID METHOD
-  // -------------------------------------
-  res.status(400).json({ message: 'Invalid dispatch method' });
+  } catch (err) {
+    console.error("Shiprocket ERROR:", err.response?.data || err.message);
+    return res.status(500).json({
+      message: "Shiprocket error",
+      details: err.response?.data || err.message
+    });
+  }
+}
+  res.status(400).json({ message: "Invalid dispatch method" });
 });
+
+router.get("/orders/:id/label", async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order || !order.shipment?.labelUrl)
+    return res.status(404).json({ message: "Label not available" });
+
+  res.json({ labelUrl: order.shipment.labelUrl });
+});
+
+
+// mock DISPATCH ORDER disable it in live
+// router.post('/orders/:id/dispatch', async (req, res) => {
+//   const { method, trackingNumber, courierName } = req.body;
+//   const order = await Order.findById(req.params.id).populate('user product');
+//   if (!order) return res.status(404).json({ message: 'Order not found' });
+
+//   // -------------------------------------
+//   // MANUAL DISPATCH
+//   // -------------------------------------
+//   if (method === 'manual') {
+//     order.shipment = {
+//       method: 'manual',
+//       status: 'dispatched',
+//       trackingNumber,
+//       courierName,
+//       history: [
+//         { status: 'dispatched', message: `Manually dispatched`, at: new Date() }
+//       ]
+//     };
+
+//     order.status = 'dispatched';
+//     await order.save();
+//     return res.json(order);
+//   }
+
+//   // -------------------------------------
+//   // MOCK SHIPROCKET DISPATCH (no API call)
+//   // -------------------------------------
+//   if (method === 'shiprocket') {
+//     // Generate fake tracking info
+//     const fakeTracking = "MOCK-SR-" + Math.floor(Math.random() * 99999999);
+//     const fakeCourier = "Shiprocket Demo Courier";
+
+//     order.shipment = {
+//       method: 'shiprocket',
+//       status: 'dispatched',
+//       trackingNumber: fakeTracking,
+//       courierName: fakeCourier,
+//       history: [
+//         {
+//           status: "dispatched",
+//           message: "Shipment created (Mock Shiprocket Mode)",
+//           at: new Date()
+//         }
+//       ]
+//     };
+
+//     order.status = "dispatched";
+//     await order.save();
+
+//     return res.json({
+//       ok: true,
+//       message: "Mock Shiprocket dispatch successful",
+//       order
+//     });
+//   }
+
+//   // -------------------------------------
+//   // INVALID METHOD
+//   // -------------------------------------
+//   res.status(400).json({ message: 'Invalid dispatch method' });
+// });
 
 
 // ------------------------------
 // SHIPROCKET TOKEN
 // ------------------------------
 async function getShiprocketToken() {
-  const resp = await axios.post(
-    'https://apiv2.shiprocket.in/v1/external/auth/login',
-    {
-      email: process.env.SR_EMAIL,
-      password: process.env.SR_PASSWORD
-    }
-  );
-  return resp.data.token;
+  try {
+    const email = (process.env.SR_EMAIL || "").trim();
+    const password = process.env.SR_PASSWORD;   // DO NOT ENCODE
+
+    console.log("Shiprocket Login Attempt:", { email });
+    console.log("Raw Password Length:", password.length);
+
+    const resp = await axios.post(
+      "https://apiv2.shiprocket.in/v1/external/auth/login",
+      {
+        email: email,
+        password: password  // RAW password, same as Postman
+      },
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("Shiprocket Token OK");
+    console.log("FINAL PASSWORD SENT TO SR:", JSON.stringify(process.env.SR_PASSWORD));
+    return resp.data.token;
+
+  } catch (err) {
+    console.error("Shiprocket Login FAILED:", err?.response?.data || err.message);
+    throw new Error("Shiprocket Authentication Failed");
+  }
 }
+
 
 
 // ------------------------------

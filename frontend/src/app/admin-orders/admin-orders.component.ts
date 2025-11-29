@@ -70,12 +70,38 @@ export class AdminOrdersComponent implements OnInit {
       .subscribe(() => this.load());
   }
 
-  dispatchShiprocket(orderId: string) {
-    if (!confirm("Create Shiprocket shipment?")) return;
+dispatchShiprocket(orderId: string) {
 
-    this.admin.dispatchShiprocket(orderId)
-      .subscribe(() => this.load());
-  }
+  if (!confirm("Create Shiprocket shipment?")) return;
+
+  this.admin.dispatchShiprocket(orderId).subscribe({
+    next: () => {
+      this.load();
+    },
+    error: (err) => {
+
+      console.error("Shiprocket error:", err);
+
+      // 🔥 Detect Shiprocket KYC error
+      if (
+        err?.error?.details?.message?.includes("KYC") ||
+        err?.error?.message?.includes("KYC") ||
+        err?.error?.details?.errors?.includes("KYC")
+      ) {
+        alert("🚨 Shiprocket KYC pending.\nPlease complete KYC to generate AWB.");
+        return;
+      }
+
+      // 🔥 Other Shiprocket Errors
+      alert(
+        "Shiprocket error: " + 
+        (err?.error?.details?.message ||
+         err?.error?.message ||
+         "Failed to create shipment")
+      );
+    }
+  });
+}
 
   openAssignGuideModal(order: any) {
   this.selectedOrder = order;
@@ -99,6 +125,12 @@ submitAssignGuide() {
       this.closeGuideModal();
       this.load();
     });
+}
+
+downloadLabel(orderId: string) {
+  this.admin.getShiprocketLabel(orderId).subscribe((res: any) => {
+    window.open(res.labelUrl, "_blank");
+  });
 }
 
 
