@@ -105,6 +105,10 @@ footer .container{
     justify-content: center;
 }
 
+.footer-left p a{
+  text-decoration: none;
+}
+
 .footer-middle .actions{
     display: flex;
     flex-direction: column;
